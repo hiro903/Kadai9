@@ -20,7 +20,7 @@ Cosemeticテーブルを作成し、カラムにないIDを検索したときに
 
 1.課題8でController,Mapperを扱い、今回はそこにビジネスロジック、特別な処理を担うServiceクラスを実装した。
 
-2.存在しないIDを検索された場合にハンドリングする例外処理をつくる
+2.存在しないIDを検索された場合にハンドリングする例外処理をつくる。
 
 3.Mapperに、Optional<Cosmetic>のコンストラクタを作る。　`Optional<Cosmetic> findBYId(int id);`<br>Optional（存在しない）を使うことで、その値がnullかもしれない…と覚えておく。<br>
 
