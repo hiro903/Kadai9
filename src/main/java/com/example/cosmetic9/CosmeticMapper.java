@@ -8,5 +8,5 @@ import java.util.Optional;
 @Mapper
 public interface CosmeticMapper {
     @Select("SELECT * FROM cosmetics WHERE id =#{id}")
-    Optional<Cosmetic> findBYId(int id);
+    Optional<Cosmetic> findById(int id);
 }

@@ -1,6 +1,5 @@
 package com.example.cosmetic9;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -22,19 +21,30 @@ public class CosmeticController {
     }
 
     @GetMapping("/cosmetics/{id}")
-    public Cosmetic getCosmetic(@PathVariable("id") int id) {
-        return cosmeticService.findCosmetic(id);
+    public ResponseEntity<Cosmetic> getCosmetic(@PathVariable("id") int id) {
+        try {
+            Cosmetic cosmetic = cosmeticService.findCosmetic(id);
+            return ResponseEntity.ok(cosmetic);
+        } catch (CosmeticNotFoundException e) {
+            // CosmeticNotFoundExceptionが発生した場合、ここでスローし、ControllerAdviceで処理されるようにする
+            throw e;
+        }
     }
+    //@GetMapping("/cosmetics/{id}")
+    //public Cosmetic getCosmetic(@PathVariable("id") int id) {
+    //  return cosmeticService.findCosmetic(id);
+    //}
 
-    @ExceptionHandler(value = CosmeticNotFoundException.class)
-    public ResponseEntity handleCosmeticNotFoundException(
-            CosmeticNotFoundException e, HttpServletRequest request) {
-        Map<String, String> body = Map.of(
-                "timestamp", ZonedDateTime.now().toString(),
-                "status", String.valueOf(HttpStatus.NOT_FOUND.value()),
-                "error", HttpStatus.NOT_FOUND.getReasonPhrase(),
-                "message", e.getMessage(),
-                "path", request.getRequestURI());
-        return new ResponseEntity(body, HttpStatus.NOT_FOUND);
-    }
+    //*@ExceptionHandler(value = CosmeticNotFoundException.class)
+    //public ResponseEntity handleCosmeticNotFoundException(
+    //  CosmeticNotFoundException e, HttpServletRequest request) {
+    //  Map<String, String> body = Map.of(
+    //     "timestamp", ZonedDateTime.now().toString(),
+    //     "status", String.valueOf(HttpStatus.NOT_FOUND.value()),
+    //     "error", HttpStatus.NOT_FOUND.getReasonPhrase(),
+    //     "message", e.getMessage(),
+    //     "path", request.getRequestURI());
+    //  return new ResponseEntity(body, HttpStatus.NOT_FOUND);
+    // }
+
 }
