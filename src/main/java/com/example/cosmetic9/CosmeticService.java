@@ -16,12 +16,4 @@ public class CosmeticService {
         Optional<Cosmetic> cosmetic = this.cosmeticMapper.findById(id);
         return cosmetic.orElseThrow(() -> new CosmeticNotFoundException("Cosmetic with id " + id + " not found"));
     }
-    //if (cosmetic.isPresent()) {
-    //isPresent⇒存在する、ブーリアン型のメソッド
-
-    //  return cosmetic.get();
-    //} else {
-    //  throw new CosmeticNotFoundException("cosmetic" + id + "not found");
-    //}
-
 }
