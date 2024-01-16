@@ -39,5 +39,28 @@ Cosemeticテーブルを作成し、カラムにないIDを検索したときに
 コードはなるべくコピペではなく、記憶の定着の為に自分で打ち込み、イメージできなくなったら絵に書いてやることを意識する。
 GitHubにpushする流れのおさらい。
 ## 6.訂正・追加事項
-@ControllerAdviceの追加。
-ServiceクラスでorElseThrowに書き替える
+- @ControllerAdviceの追加。
+- ServiceクラスでorElseThrowに書き替える
+- CosmeticControllerクラスの@GetMappingの処理の書き替え<br>ResponseEntityを使ってnullだった場合の処理を書く。
+- ```
+   @GetMapping("/cosmetics/{id}")
+  public ResponseEntity<Cosmetic> getCosmetic(@PathVariable("id") int id) {
+  Cosmetic cosmetic = cosmeticService.findCosmetic(id);
+        if (cosmetic != null) {
+            return new ResponseEntity<>(cosmetic, HttpStatus.OK);
+        } else {
+            throw new CosmeticNotFoundException("Cosmetic not found with id: " + id);
+        }
+  }
+  ``` 
+- Optionalを使ったら↓
+- ```
+  @GetMapping("/cosmetics/{id}")
+   public ResponseEntity<Cosmetic> getCosmetic(@PathVariable("id") int id) {
+   Optional<Cosmetic> optionalCosmetic = cosmeticService.findCosmetic(id);
+
+    return optionalCosmetic
+            .map(cosmetic -> new ResponseEntity<>(cosmetic, HttpStatus.OK))
+            .orElseThrow(() -> new CosmeticNotFoundException("Cosmetic not found with id: " + id));
+}
+```
