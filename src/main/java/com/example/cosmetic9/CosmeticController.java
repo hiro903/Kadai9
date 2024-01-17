@@ -17,12 +17,6 @@ public class CosmeticController {
 
     @GetMapping("/cosmetics/{id}")
     public ResponseEntity<Cosmetic> getCosmetic(@PathVariable("id") int id) {
-        Cosmetic cosmetic = cosmeticService.findCosmetic(id);
-
-        if (cosmetic != null) {
-            return new ResponseEntity<>(cosmetic, HttpStatus.OK);
-        } else {
-            throw new CosmeticNotFoundException("Cosmetic not found with id: " + id);
-        }
+        return ResponseEntity.ok(cosmeticService.findCosmetic(id));
     }
 }

@@ -41,7 +41,7 @@ GitHubにpushする流れのおさらい。
 ## 6.訂正・追加事項
 - @ControllerAdviceの追加。
 - ServiceクラスでorElseThrowに書き替える
-- CosmeticControllerクラスの@GetMappingの処理の書き替え<br>ResponseEntityを使ってnullだった場合の処理を書く。
+- CosmeticControllerクラスの@GetMappingの処理の書き替え<br>ResponseEntityを使ってnullだった場合の処理を書いてみたが、そもそもif文はいらないので下記を直す。
 - ```
    @GetMapping("/cosmetics/{id}")
   public ResponseEntity<Cosmetic> getCosmetic(@PathVariable("id") int id) {
@@ -53,7 +53,7 @@ GitHubにpushする流れのおさらい。
         }
   }
   ``` 
-- Optionalを使ったら↓
+- Optionalを使ったらこう書ける↓
 - ```
   @GetMapping("/cosmetics/{id}")
    public ResponseEntity<Cosmetic> getCosmetic(@PathVariable("id") int id) {
@@ -62,5 +62,5 @@ GitHubにpushする流れのおさらい。
     return optionalCosmetic
             .map(cosmetic -> new ResponseEntity<>(cosmetic, HttpStatus.OK))
             .orElseThrow(() -> new CosmeticNotFoundException("Cosmetic not found with id: " + id));
-}
-```
+  }
+  ```
