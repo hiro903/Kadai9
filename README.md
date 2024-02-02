@@ -32,8 +32,35 @@ Cosemeticテーブルを作成し、カラムにないIDを検索したときに
 コントローラーアドバイスクラスに設定します。このアノテーションが設定されると、クラスが DI コンテナへの登録対象としてマークされます。
 
 @ExceptionHandler
-例外をハンドリングするコントローラーメソッドに設定します。対処する例外クラスごとに、複数定義することができます。
+例外をハンドリングするコントローラーメソッドに設定します。対処する例外クラスごとに、複数定義することができます。<br>
 コントローラーでも使用できますが、この場合、そのコントローラー内のみで有効になります。コントローラーアドバイスで設定した場合は、すべてのコントローラーに対して、横断的に作用します。
 ## 5.今後の課題、気を付けること
 年末の仕事の忙しさからの体調不良でしばらく学習することができず、忘れていることも多かった。
 コードはなるべくコピペではなく、記憶の定着の為に自分で打ち込み、イメージできなくなったら絵に書いてやることを意識する。
+GitHubにpushする流れのおさらい。
+## 6.訂正・追加事項
+- @ControllerAdviceの追加。
+- ServiceクラスでorElseThrowに書き替える
+- CosmeticControllerクラスの@GetMappingの処理の書き替え<br>ResponseEntityを使ってnullだった場合の処理を書いてみたが、そもそもif文はいらないので下記を直す。
+- ```
+   @GetMapping("/cosmetics/{id}")
+  public ResponseEntity<Cosmetic> getCosmetic(@PathVariable("id") int id) {
+  Cosmetic cosmetic = cosmeticService.findCosmetic(id);
+        if (cosmetic != null) {
+            return new ResponseEntity<>(cosmetic, HttpStatus.OK);
+        } else {
+            throw new CosmeticNotFoundException("Cosmetic not found with id: " + id);
+        }
+  }
+  ``` 
+- Optionalを使ったらこう書ける↓
+- ```
+  @GetMapping("/cosmetics/{id}")
+   public ResponseEntity<Cosmetic> getCosmetic(@PathVariable("id") int id) {
+   Optional<Cosmetic> optionalCosmetic = cosmeticService.findCosmetic(id);
+
+    return optionalCosmetic
+            .map(cosmetic -> new ResponseEntity<>(cosmetic, HttpStatus.OK))
+            .orElseThrow(() -> new CosmeticNotFoundException("Cosmetic not found with id: " + id));
+  }
+  ```
